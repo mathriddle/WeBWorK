@@ -2,7 +2,10 @@
 ##  Optimization - maximize volume of a box with open top and fixed 
 ##  surface area. Uses GeoGebra HTML5 applet to display graph of volume
 ##  function and an animation of the box as the base length is changed.
-##  GeoGebra applet code used from https://github.com/Edfinity/ww_ggb_applet
+##  Embedding of Geogebra applet uses https://github.com/Edfinity/ww_ggb_applet.
+##  Uses scaffolding to first set up the problem in terms of length and height,
+##  then to give a function for volume in terms of the base length, and find its derivative,
+##  then finally to use the derivative to find the optimal dimensions.
 ##ENDDESCRIPTION
 
 ## DBsubject(Calculus - single variable)
@@ -201,13 +204,19 @@ Solve the area equation for [`h`] and substitute into the volume formula to get 
 END_PGML_HINT
 
 BEGIN_PGML_SOLUTION
-The area of the box is [`x^2 + 4xh = [$A]`]. Solving this equation for [`h`] and substituting into [`V`] gives
+The area of the box is [`x^2 + 4xh = [$A]`]. Solving this equation for [`h`] gives
+>>[``\begin{aligned}
+  x^2 + 4xh = [$A] \\
+  4xh = [$A] - x^2 \\
+  h = \frac{[$A] - x^2}{4x}
+\end{aligned}``]<<
 
-[``V(x) = x^2 \left( \frac{[$A] - x^2}{4x} \right) = \frac{1}{4}\left( [$A]x - x^3 \right)``]
+Now substitut into [`V = x^2h`] and simplify.
+>>[``V(x) = x^2 \left( \frac{[$A] - x^2}{4x} \right) = \frac{1}{4}\left( [$A]x - x^3 \right)``]<<
 
 The domain of this function is [`0 \le x \le \sqrt{[$A]}`] since the you want [`V(x) \ge 0`] with [`x \ge 0.`]
 
-[``V'(x) = \frac{1}{4}\left( [$A] - 3x^2\right)``]  
+>>[``V'(x) = \frac{1}{4}\left( [$A] - 3x^2\right)``]<<  
 
 END_PGML_SOLUTION
 
@@ -232,18 +241,26 @@ BEGIN_PGML_SOLUTION
 
 To maximize [`V`], take the derivative and set it equal to 0.
 
-[``V'(x) = \frac{1}{4}\left( [$A] - 3x^2\right) = 0 \Rightarrow x = \sqrt{ \frac{[$A]}{3} } = \sqrt{[$b]}``]
+>>[``
+\begin{aligned}
+V'(x) = \frac{1}{4}\left( [$A] - 3x^2\right) = 0 \\ \\
+[$A] - 3x^2 = 0 \\ \\
+x^2 = \frac{[$A]}{3} = [$b] \\ \\
+x = \sqrt{[$b]}
+\end{aligned}
+``]<<
 
 The graph shows that this is the global maximum on the domain [`0 \le x \le \sqrt{A}`] of [`V`]. Calculus can verify this. Note that [``V'' = -\frac{6}{4}x \lt 0``]
 and therefore the critical point is a local maximum by the second derivative test. But since [`V`] is a continuous function and there is only one critical point in the interval [`0 \le x \le \sqrt{A}`], this must actually be the global maximum on this interval.
 
 The optimal height is
 
-[``h = \frac{A-x^2}{ 4x}
-= \frac{[$A] - [$b]}{ 4\sqrt{[$b]}}
-= \frac{[$A-$b]}{4\sqrt{[$b]}}
-= \frac{2([$b])}{4\sqrt{[$b]}}
-=  \frac{\sqrt{[$b]}}{2}.``]
+>>[``\begin{aligned}
+h = \frac{A-x^2}{ 4x} = \frac{[$A] - [$b]}{ 4\sqrt{[$b]}} \\ \\
+= \frac{[$A-$b]}{4\sqrt{[$b]}} = \frac{2([$b])}{4\sqrt{[$b]}} \\ \\
+=  \frac{\sqrt{[$b]}}{2}
+\end{aligned}
+``]<<
 
 Therefore the optimal height is half the optimal base length. Can you show that this is always the case for any value of the fixed surface area  [`A`]?
 

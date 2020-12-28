@@ -1,8 +1,14 @@
 ##DESCRIPTION
 ##  Optimization - minimize perimeter of Norman window with fixed area.
+##  Modification of OPL problem NormanWindow.pg from CSUOhio to use GeoGebra
+##  HTML5 applet rather than Flash. Made the area be randomly chosen and 
+##  added hint and solution.
 ##  Uses GeoGebra HTML5 applet to display graph of area function
 ##  and an animation of the pen as the radius of semicircle is changed.
-##  Geogebra applet from https://github.com/Edfinity/ww_ggb_applet
+##  Embedding of Geogebra applet uses https://github.com/Edfinity/ww_ggb_applet.
+##  Uses scaffolding to first set up the problem in terms of radius and height,
+##  then to give a function for perimeter in terms of the radius, and find its derivative,
+##  then finally to use the derivative to find the optimal dimensions.
 ##ENDDESCRIPTION
 
 ## DBsubject(Calculus - single variable)
@@ -36,11 +42,12 @@ $showHint = 0;
 ##############################################################
 
 Context("Numeric");
-Parser::Number::NoDecimals;
+#Parser::Number::NoDecimals;
 Context()->variables->are(r=>"Real",h=>"Real");
 Context()->flags->set(
-   tolerance => 0.000005, tolType => "absolute",
-   formatStudentAnswer => "parsed"
+   tolerance => 0.0005, tolType => "absolute",
+   Context()->{format}{number} = "%.6f#",
+#   formatStudentAnswer => "parsed"
 );
 
 $A = random(100,400);
@@ -187,15 +194,26 @@ END_PGML_HINT
 
 BEGIN_PGML_SOLUTION
 
-Solving the equation [`2 r h + \frac{1}{2}\pi r^2 = [$A]`] for [`h`] and substituting into [`P`] gives
+Solving the equation [`2 r h + \frac{1}{2}\pi r^2 = [$A]`] for [`h`] gives
 
-[``P(r) = 2\left ( \frac{[$A] - \frac{1}{2}\pi r^2}{2r}\right ) +2r + \pi r
-= \frac{[$A]}{r} - \frac{1}{2}\pi r + 2r + \pi r
-= \frac{[$A]}{r} + 2r + \frac{1}{2}\pi r``]
+>>[``\begin{aligned}
+2 r h + \frac{1}{2}\pi r^2 = [$A] \\
+2rh = [$A] - \frac{1}{2}\pi r^2 \\
+h = \frac{[$A] - \frac{1}{2}\pi r^2}{2r}
+\end{aligned}
+``]<<
+
+Now substituting into [`P`] and simplify.
+
+>>[``\begin{aligned}
+P(r) = 2\left ( \frac{[$A] - \frac{1}{2}\pi r^2}{2r}\right ) +2r + \pi r \\
+= \frac{[$A]}{r} - \frac{1}{2}\pi r + 2r + \pi r \\
+= \frac{[$A]}{r} + 2r + \frac{1}{2}\pi r
+\end{aligned}``]<<
 
 The domain of this function is [`r \gt 0`].
 
-[``P'(r) = -\frac{[$A]}{r^2} + 2 + \frac{1}{2}\pi``]  
+>>[``P'(r) = -\frac{[$A]}{r^2} + 2 + \frac{1}{2}\pi``]<<  
 
 END_PGML_SOLUTION
 
@@ -206,11 +224,13 @@ can_open => when_previous_correct,
 is_open => correct_or_first_incorrect);
 
 BEGIN_PGML
-Use the derivative to find the *exact* radius [`r`] that minimizes the perimeter.
+Give your answers rounded to 3 decimal places.
+
+Use the derivative to find the radius [`r`] that minimizes the perimeter.
 
 [`r`] = [________________________]{$optimalRadius}
 
-What is the *exact* height of the window with minimum perimeter?
+What is the height of the window with minimum perimeter?
 
 [`h`] = [________________________]{$optimalHeight}  
 
@@ -218,19 +238,32 @@ END_PGML
 
 BEGIN_PGML_SOLUTION
 
-To minimize [`P`], take the derivative and set it equal to 0.
+To minimize [`P(r)`], take the derivative and set it equal to 0.
 
-[``P' = -\frac{[$A]}{r^2} + 2 + \frac{1}{2}\pi  = 0 \Rightarrow
-r = \sqrt{\frac{[$A]}{2+\frac{1}{2}\pi }} = \sqrt{\frac{[$A*2]}{4+\pi}}``]
+>>[``
+\begin{aligned}
+P'(r) = -\frac{[$A]}{r^2} + 2 + \frac{1}{2}\pi  = 0 \\ \\
+\frac{[$A]}{r^2} = 2 + \frac{1}{2}\pi \\ \\
+r^2 = \frac{[$A]}{2+\frac{1}{2}\pi } = \frac{[$A*2]}{4+\pi} \\ \\
+r = \sqrt{\frac{[$A*2]}{4+\pi}} \approx [$optimalRadius]
+\end{aligned}
+``]<<
+
+To three decimal places rounded, [`r \approx [@sprintf("%.3f", $optimalRadius)@]`].
 
 The graph suggests that this is the global minimum. Calculus can verify this. Note that [``P'' =  \frac{[$A*2]}{r^3} \gt 0``]
 and therefore the critical point is a local minimum by the second derivative test. But since [`P`] is a continuous function for [`r \gt 0`] and there is only one critical point, this must actually be the global minimum for [`r \gt 0.`]
 
-The optimal height is
-[``h = \frac{A - \frac{1}{2}\pi r^2}{2r}
-= \frac{[$A] - \frac{1}{2}\pi \left(\frac{[$A*2]}{4+\pi} \right)}{2\sqrt{\frac{[$A*2]}{4+\pi}}}
+The optimal height is [``h = \frac{A - \frac{1}{2}\pi r^2}{2r} \approx [$optimalHeight]``] using the optimal radius found above. To three decimal places rounded, [`h \approx [@sprintf("%.3f", $optimalHeight)@]`]. It looks like the optimal radius and optimal height are the same! This is because
+
+>>[``\begin{aligned}
+h = \frac{A - \frac{1}{2}\pi r^2}{2r}
+= \frac{[$A] - \frac{1}{2}\pi \left(\frac{[$A*2]}{4+\pi} \right)}{2\sqrt{\frac{[$A*2]}{4+\pi}}} 
+= \frac{\frac{580(4+\pi)-580\pi}{2(4+\pi)}}{2\sqrt{\frac{[$A*2]}{4+\pi}}} \\ \\
+= \frac{\frac{580(4)}{2(4+\pi)}}{2\sqrt{\frac{[$A*2]}{4+\pi}}}
 = \frac{\frac{[$A*2]}{4+\pi}}{\sqrt{\frac{[$A*2]}{4+\pi}}}
-= \sqrt{\frac{[$A*2]}{4+\pi}}.``]
+= \sqrt{\frac{[$A*2]}{4+\pi}} 
+\end{aligned}``]<<
 
 Therefore the optimal height is equal to the optimal radius which means that the height of the optimal rectangle is half the width of the rectangle. Can you show that this is always the case for any value of the fixed area [`A`]?
 
